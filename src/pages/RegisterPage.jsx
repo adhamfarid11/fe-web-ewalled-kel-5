@@ -28,7 +28,7 @@ const RegisterPage = () => {
     setSuccessMessage(''); // Reset success message
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, formData);
       setLoading(false);
 
       if (response.status === 201) {

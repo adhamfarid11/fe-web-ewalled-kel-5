@@ -23,16 +23,18 @@ function App({ darkMode }) {
     const [totalPages, setTotalPages] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(
-        !!localStorage.getItem("token")
+        !!localStorage.getItem("token"),
     );
     const [currentUser, setCurrentUser] = useState(null);
     const [showCount, setShowCount] = useState(10);
     const [sortCriteria, setSortCriteria] = useState("date");
     const [sortDirection, setSortDirection] = useState("desc");
 
+    const [balance, setBalance] = useState(0);
+
     // Format the balance as Indonesian Rupiah
     const formatBalance = (balance) => {
-        if (balance === undefined) return "Rp 0,00";
+        if (balance === undefined) return "-";
         return new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
@@ -50,6 +52,53 @@ function App({ darkMode }) {
         setIsAuthenticated(false);
     };
 
+    // fetch user profile
+    const fetchUserProfile = async () => {
+        console.log("gett this user ");
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/users/me`,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            localStorage.setItem("user", JSON.stringify(data.data));
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+        }
+    };
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+
+            // Fetch data based on user ID
+            fetch(`/api/wallets/${parsedUser.id}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then((data) => setBalance(data))
+                .catch((error) => console.error("Fetch error:", error));
+        }
+    }, []);
+
     // Fetch transactions from the API
     const fetchTransactions = async () => {
         try {
@@ -63,11 +112,9 @@ function App({ darkMode }) {
             }
 
             const response = await fetch(
-                `http://localhost:8080/api/transactions?userId=${
+                `${import.meta.env.VITE_API_URL}/transactions?walletId=${
                     currentUser.id
-                }&page=${
-                    page - 1
-                }&search=${searchTerm}&sort=${sortCriteria},${sortDirection}&size=${showCount}`,
+                }`,
                 {
                     method: "GET",
                     headers: {
@@ -75,7 +122,7 @@ function App({ darkMode }) {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                }
+                },
             );
 
             if (!response.ok) {
@@ -83,13 +130,13 @@ function App({ darkMode }) {
             }
 
             const data = await response.json();
-            setTransactions(data.content || data);
+            setTransactions(data.data || data);
             setTotalPages(data.totalPages || 1);
             setError(null);
         } catch (err) {
             setError(
                 err.message ||
-                    "Could not fetch transactions. Please check your connection and try again."
+                    "Could not fetch transactions. Please check your connection and try again.",
             );
             console.error("API Error:", err);
         } finally {
@@ -103,15 +150,17 @@ function App({ darkMode }) {
             const token = localStorage.getItem("token");
             if (!token || !currentUser?.id) return;
 
+            const storedUser = JSON.parse(localStorage.getItem("user"));
+
             const response = await fetch(
-                `http://localhost:8080/api/users/${currentUser.id}`,
+                `${import.meta.env.VITE_API_URL}/wallets/${storedUser?.id}`,
                 {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
-                }
+                },
             );
 
             if (!response.ok) {
@@ -120,24 +169,34 @@ function App({ darkMode }) {
 
             const data = await response.json();
             setCurrentUser((prevUser) =>
-                prevUser ? { ...prevUser, balance: data.balance } : null
+                prevUser ? { ...prevUser, balance: data.balance } : null,
             );
         } catch (error) {
             console.error("Error fetching user balance:", error);
         }
     };
 
-    // Load user data from localStorage on initial render
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
+        const loadUserProfile = async () => {
             try {
-                const parsedUser = JSON.parse(storedUser);
-                setCurrentUser(parsedUser);
-            } catch (e) {
-                console.error("Error parsing user from localStorage:", e);
+                await fetchUserProfile();
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
             }
-        }
+
+            // Retrieve user from localStorage after fetch completes
+            const storedUser = localStorage.getItem("user");
+            if (storedUser) {
+                try {
+                    const parsedUser = JSON.parse(storedUser);
+                    setCurrentUser(parsedUser); // Update state with user data
+                } catch (e) {
+                    console.error("Error parsing user from localStorage:", e);
+                }
+            }
+        };
+
+        loadUserProfile();
     }, []);
 
     // Fetch transactions and user balance when authenticated or user changes
@@ -179,17 +238,51 @@ function App({ darkMode }) {
     };
 
     const formatDateTime = (dateString) => {
-        return new Date(dateString)
-            .toLocaleString("id-ID", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-            })
-            .replace(/\//g, "-");
+        const date = new Date(dateString);
+
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+
+        const day = date.getDate();
+        const monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ];
+        const month = monthNames[date.getMonth()];
+        const year = date.getFullYear();
+
+        return `${hours}:${minutes}:${seconds}, ${day} ${month} ${year}`;
+    };
+
+    const isCredit = (transaction) => {
+        const id = JSON.parse(localStorage.getItem("user")).id;
+
+        if (transaction.transactionType === "TRANSFER") return true;
+
+        return transaction?.sender?.id != id;
+    };
+
+    const handleTransactionFromTo = (transaction) => {
+        const id = JSON.parse(localStorage.getItem("user")).id;
+
+        if (transaction.transactionType === "TRANSFER") {
+            if (transaction?.sender?.id == id) {
+                return transaction?.recipient?.fullname;
+            }
+            return transaction?.sender?.fullname;
+        }
+        return "-";
     };
 
     return (
@@ -246,7 +339,7 @@ function App({ darkMode }) {
                                         <div className="flex items-center space-x-3 w-full sm:w-auto justify-end">
                                             <div className="text-right">
                                                 <div className="font-medium">
-                                                    {currentUser?.namaLengkap ||
+                                                    {currentUser?.fullName ||
                                                         "User"}
                                                 </div>
                                                 <div
@@ -314,13 +407,13 @@ function App({ darkMode }) {
                                                     >
                                                         {showBalance
                                                             ? formatBalance(
-                                                                  currentUser?.balance
+                                                                  currentUser?.balance,
                                                               )
                                                             : "••••••••"}
                                                         <button
                                                             onClick={() =>
                                                                 setShowBalance(
-                                                                    !showBalance
+                                                                    !showBalance,
                                                                 )
                                                             }
                                                             className={`ml-2 ${
@@ -387,7 +480,7 @@ function App({ darkMode }) {
                                                         value={searchTerm}
                                                         onChange={(e) =>
                                                             setSearchTerm(
-                                                                e.target.value
+                                                                e.target.value,
                                                             )
                                                         }
                                                         onKeyPress={(e) =>
@@ -419,8 +512,8 @@ function App({ darkMode }) {
                                                             setShowCount(
                                                                 Number(
                                                                     e.target
-                                                                        .value
-                                                                )
+                                                                        .value,
+                                                                ),
                                                             )
                                                         }
                                                         className={`flex items-center justify-between px-3 py-2 border ${
@@ -455,7 +548,7 @@ function App({ darkMode }) {
                                                         value={sortCriteria}
                                                         onChange={(e) =>
                                                             setSortCriteria(
-                                                                e.target.value
+                                                                e.target.value,
                                                             )
                                                         }
                                                         className={`flex items-center justify-between px-3 py-2 border ${
@@ -477,7 +570,7 @@ function App({ darkMode }) {
                                                         value={sortDirection}
                                                         onChange={(e) =>
                                                             setSortDirection(
-                                                                e.target.value
+                                                                e.target.value,
                                                             )
                                                         }
                                                         className={`flex items-center justify-between px-3 py-2 border ${
@@ -569,7 +662,7 @@ function App({ darkMode }) {
                                                             0 ? (
                                                                 transactions.map(
                                                                     (
-                                                                        transaction
+                                                                        transaction,
                                                                     ) => (
                                                                         <tr
                                                                             key={
@@ -589,7 +682,7 @@ function App({ darkMode }) {
                                                                                 }`}
                                                                             >
                                                                                 {formatDateTime(
-                                                                                    transaction.date
+                                                                                    transaction.transactionDate,
                                                                                 )}
                                                                             </td>
                                                                             <td
@@ -599,10 +692,15 @@ function App({ darkMode }) {
                                                                                         : "text-gray-900"
                                                                                 }`}
                                                                             >
-                                                                                {transaction.type ===
-                                                                                "credit"
-                                                                                    ? "Topup"
-                                                                                    : "Transfer"}
+                                                                                {transaction.transactionType ===
+                                                                                    "TOP_UP" &&
+                                                                                    "Top Up"}
+                                                                                {transaction.transactionType ===
+                                                                                    "TRANSFER" &&
+                                                                                    "Transfer"}
+                                                                                {transaction.transactionType ===
+                                                                                    "QR" &&
+                                                                                    "QR Scan"}
                                                                             </td>
                                                                             <td
                                                                                 className={`px-4 py-3 text-sm ${
@@ -611,9 +709,9 @@ function App({ darkMode }) {
                                                                                         : "text-gray-900"
                                                                                 }`}
                                                                             >
-                                                                                {
-                                                                                    transaction.fromTo
-                                                                                }
+                                                                                {handleTransactionFromTo(
+                                                                                    transaction,
+                                                                                )}
                                                                             </td>
                                                                             <td
                                                                                 className={`px-4 py-3 text-sm ${
@@ -628,25 +726,27 @@ function App({ darkMode }) {
                                                                             </td>
                                                                             <td
                                                                                 className={`px-4 py-3 text-sm text-right ${
-                                                                                    transaction.type ===
-                                                                                    "credit"
+                                                                                    !isCredit(
+                                                                                        transaction,
+                                                                                    )
                                                                                         ? "text-green-600"
                                                                                         : darkMode
                                                                                         ? "text-gray-300"
                                                                                         : "text-gray-900"
                                                                                 }`}
                                                                             >
-                                                                                {transaction.type ===
-                                                                                "credit"
-                                                                                    ? "+"
-                                                                                    : "-"}{" "}
+                                                                                {isCredit(
+                                                                                    transaction,
+                                                                                )
+                                                                                    ? "-"
+                                                                                    : "+"}{" "}
                                                                                 Rp{" "}
                                                                                 {Math.abs(
-                                                                                    transaction.amount
+                                                                                    transaction.amount,
                                                                                 ).toLocaleString()}
                                                                             </td>
                                                                         </tr>
-                                                                    )
+                                                                    ),
                                                                 )
                                                             ) : (
                                                                 <tr>
@@ -713,7 +813,7 @@ function App({ darkMode }) {
                                                                                 : "-"}{" "}
                                                                             Rp{" "}
                                                                             {Math.abs(
-                                                                                transaction.amount
+                                                                                transaction.amount,
                                                                             ).toLocaleString()}
                                                                         </div>
                                                                     </div>
@@ -751,7 +851,7 @@ function App({ darkMode }) {
                                                                         }
                                                                     </div>
                                                                 </div>
-                                                            )
+                                                            ),
                                                         )
                                                     ) : (
                                                         <div
@@ -790,7 +890,8 @@ function App({ darkMode }) {
                                                             <button
                                                                 onClick={() =>
                                                                     goToPage(
-                                                                        page - 1
+                                                                        page -
+                                                                            1,
                                                                     )
                                                                 }
                                                                 className={`px-3 py-1 text-sm ${
@@ -806,7 +907,7 @@ function App({ darkMode }) {
                                                             {
                                                                 length: Math.min(
                                                                     3,
-                                                                    totalPages
+                                                                    totalPages,
                                                                 ),
                                                             },
                                                             (_, i) => {
@@ -827,7 +928,7 @@ function App({ darkMode }) {
                                                                             }
                                                                             onClick={() =>
                                                                                 goToPage(
-                                                                                    pageNum
+                                                                                    pageNum,
                                                                                 )
                                                                             }
                                                                             className={`px-3 py-1 text-sm ${
@@ -852,13 +953,14 @@ function App({ darkMode }) {
                                                                     );
                                                                 }
                                                                 return null;
-                                                            }
+                                                            },
                                                         )}
                                                         {page < totalPages && (
                                                             <button
                                                                 onClick={() =>
                                                                     goToPage(
-                                                                        page + 1
+                                                                        page +
+                                                                            1,
                                                                     )
                                                                 }
                                                                 className={`px-3 py-1 text-sm ${

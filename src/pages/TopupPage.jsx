@@ -90,7 +90,7 @@ const TopupPage = () => {
       const token = localStorage.getItem('token');
       if (!token || !currentUser?.id) return;
 
-      const response = await fetch(`http://localhost:8080/api/users/${currentUser.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${currentUser.id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -196,7 +196,7 @@ const TopupPage = () => {
         }
 
         // Kirim permintaan top-up ke backend
-        const response = await fetch('http://localhost:8080/api/transactions/topup', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/transactions/topup`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

@@ -77,6 +77,7 @@ const TransferPage = () => {
 
   // Fetch users from backend
   useEffect(() => {
+
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -85,7 +86,7 @@ const TransferPage = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:8080/api/users', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/wallets/availability/`+id, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -99,6 +100,7 @@ const TransferPage = () => {
 
         const data = await response.json();
         setUsers(data);
+        console.log(data)
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -115,7 +117,7 @@ const TransferPage = () => {
       const token = localStorage.getItem('token');
       if (!token || !currentUser?.id) return;
 
-      const response = await fetch(`http://localhost:8080/api/users/${currentUser.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${currentUser.id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -225,7 +227,7 @@ const TransferPage = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:8080/api/transactions/transfer', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/transactions/transfer`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

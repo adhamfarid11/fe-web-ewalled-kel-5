@@ -27,6 +27,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
       [e.target.name]: e.target.value
     });
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
     setSuccessMessage('');
 
     try {
-        const response = await axios.post('http://localhost:8080/api/auth/login', formData, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, formData, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -45,13 +46,11 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
         if (response.status === 200 && response.data) {
             localStorage.setItem('token', response.data.token);
-            if (response.data.user) {
-                localStorage.setItem('user', JSON.stringify(response.data.user));
-            }
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
             setIsAuthenticated(true); // Set isAuthenticated to true
             window.location.href = '/';
-        }
+          }
+
     } catch (err) {
         console.error('Login error:', err);
         setError(
