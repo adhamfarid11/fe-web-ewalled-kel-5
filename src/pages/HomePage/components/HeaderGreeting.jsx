@@ -36,18 +36,18 @@ const HeaderGreeting = ({ darkMode }) => {
             <div className="flex items-center space-x-3 w-full sm:w-auto justify-end">
                 <div className="text-right">
                     <div className="font-medium">
-                        {currentUser?.fullName || "User"}
+                        {currentUser?.fullname || "-"}
                     </div>
                     <div
                         className={`text-sm ${
                             darkMode ? "text-gray-400" : "text-gray-500"
                         }`}
                     >
-                        {currentUser?.accountType || "Personal Account"}
+                        {currentUser?.username || "-"}
                     </div>
                 </div>
                 <img
-                    src="/images/user.png"
+                    src={currentUser?.avatarUrl || "/images/user.png"}
                     alt="Profile"
                     className="w-10 h-10 rounded-full"
                 />
