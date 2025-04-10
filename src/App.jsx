@@ -5,7 +5,6 @@ import {
     Route,
     Navigate,
 } from "react-router-dom";
-import { Eye, Plus, Send, Search, ChevronDown } from "lucide-react";
 import TransferPage from "./pages/TransferPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";

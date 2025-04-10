@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, CheckCircle, Printer } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 import formatBalance from "../../utils/formatBalance";
 import { useAuth } from "../../context/AuthContext";
