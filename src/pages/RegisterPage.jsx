@@ -45,7 +45,6 @@ const RegisterPage = () => {
                     noHp: "",
                 });
 
-                // Optional: Redirect ke halaman login setelah beberapa detik
                 setTimeout(() => {
                     navigate("/login");
                 }, 3000);

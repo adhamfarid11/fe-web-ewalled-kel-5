@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from "react";
 import Cookies from "js-cookie";
 import useProfile from "../hooks/useProfile";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -25,6 +26,9 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setIsAuthenticated(false);
         setCurrentUser(null);
+        localStorage.removeItem("token");
+
+        window.location.href = "/login";
     };
 
     return (
