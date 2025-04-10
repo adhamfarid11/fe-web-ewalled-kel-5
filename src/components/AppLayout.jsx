@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { Menu, Sun, Moon } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-const AppLayout = ({ children, mobileMenuOpen, setMobileMenuOpen }) => {
+const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
     const { isAuthenticated } = useAuth();
     const location = useLocation();
     const noNavbarRoutes = ["/login", "/register"];
@@ -327,7 +327,7 @@ const AppLayout = ({ children, mobileMenuOpen, setMobileMenuOpen }) => {
                         : "container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
                 }`}
             >
-                {children}
+                <Outlet />
             </main>
         </div>
     );
