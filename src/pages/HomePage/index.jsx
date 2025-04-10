@@ -10,7 +10,6 @@ const HomePage = ({ darkMode }) => {
         <>
             <HeaderGreeting darkMode={darkMode} />
             <AccountBalance darkMode={darkMode} />
-            <Table darkMode={darkMode} />
         </>
     );
 };

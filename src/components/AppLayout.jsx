@@ -130,6 +130,31 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                             >
                                 Topup
                             </a>
+                            <a
+                                href="/analytics"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNavigation("/analytics");
+                                }}
+                                className={`${
+                                    location.pathname === "/analytics"
+                                        ? darkMode
+                                            ? "text-blue-400 font-medium"
+                                            : "text-blue-600 font-medium"
+                                        : darkMode
+                                        ? "text-gray-300"
+                                        : "text-gray-600"
+                                }`}
+                            >
+                                Analytics
+                            </a>
+
+                            {/* Garis pembatas antara Sign Out dan icon mode */}
+                            <div
+                                className={`h-6 w-px ${
+                                    darkMode ? "bg-gray-600" : "bg-gray-300"
+                                }`}
+                            ></div>
                             <button
                                 onClick={logout}
                                 className={
@@ -138,13 +163,6 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                             >
                                 Sign Out
                             </button>
-
-                            {/* Garis pembatas antara Sign Out dan icon mode */}
-                            <div
-                                className={`h-6 w-px ${
-                                    darkMode ? "bg-gray-600" : "bg-gray-300"
-                                }`}
-                            ></div>
 
                             <button
                                 onClick={toggleDarkMode}

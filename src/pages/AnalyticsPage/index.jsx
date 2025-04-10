@@ -1,10 +1,11 @@
 import React from "react";
 import DoughnutChart from "./components/DoughnutChart";
+import Table from "../HomePage/components/Table";
 
 const AnalyticsPage = ({ darkMode }) => {
     return (
         <div
-            className={`flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4 ${
+            className={`flex flex-col justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4 ${
                 darkMode ? "text-white" : "text-gray-900"
             }`}
         >
@@ -14,6 +15,7 @@ const AnalyticsPage = ({ darkMode }) => {
                 </h1>
                 <DoughnutChart />
             </div>
+            <Table darkMode={darkMode} />
         </div>
     );
 };
