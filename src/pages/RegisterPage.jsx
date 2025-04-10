@@ -4,10 +4,11 @@ import axios from "axios";
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
-        namaLengkap: "",
+        fullname: "",
         email: "",
         password: "",
-        noHp: "",
+        phoneNumber: "",
+        username: "",
     });
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
@@ -45,7 +46,6 @@ const RegisterPage = () => {
                     noHp: "",
                 });
 
-                // Optional: Redirect ke halaman login setelah beberapa detik
                 setTimeout(() => {
                     navigate("/login");
                 }, 3000);
@@ -92,9 +92,20 @@ const RegisterPage = () => {
                         <div className="mb-4">
                             <input
                                 type="text"
-                                name="namaLengkap"
+                                name="fullname"
                                 placeholder="Nama Lengkap"
-                                value={formData.namaLengkap}
+                                value={formData.fullname}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded"
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                value={formData.username}
                                 onChange={handleChange}
                                 className="w-full p-3 border border-gray-300 rounded"
                                 required
@@ -125,9 +136,9 @@ const RegisterPage = () => {
                         <div className="mb-4">
                             <input
                                 type="tel"
-                                name="noHp"
-                                placeholder="No Hp"
-                                value={formData.noHp}
+                                name="phoneNumber"
+                                placeholder="Phone Number"
+                                value={formData.phoneNumber}
                                 onChange={handleChange}
                                 className="w-full p-3 border border-gray-300 rounded"
                                 required

@@ -27,7 +27,7 @@ function App({ darkMode }) {
     return (
         <Router>
             <Routes>
-                {/* unprotected routes */}
+                {/* Unprotected routes */}
                 <Route
                     path="/login"
                     element={<LoginPage darkMode={darkMode} />}
@@ -36,26 +36,29 @@ function App({ darkMode }) {
                     path="/register"
                     element={<RegisterPage darkMode={darkMode} />}
                 />
+
+                {/* Protected routes */}
+                <Route
+                    element={
+                        <ProtectedRoute>
+                            <AppLayout darkMode={darkMode} />
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route
+                        path="/"
+                        element={<HomePage darkMode={darkMode} />}
+                    />
+                    <Route
+                        path="/transfer"
+                        element={<TransferPage darkMode={darkMode} />}
+                    />
+                    <Route
+                        path="/topup"
+                        element={<TopupPage darkMode={darkMode} />}
+                    />
+                </Route>
             </Routes>
-            {/* protected routes */}
-            <ProtectedRoute>
-                <AppLayout darkMode={darkMode}>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={<HomePage darkMode={darkMode} />}
-                        />
-                        <Route
-                            path="/transfer"
-                            element={<TransferPage darkMode={darkMode} />}
-                        />
-                        <Route
-                            path="/topup"
-                            element={<TopupPage darkMode={darkMode} />}
-                        />
-                    </Routes>
-                </AppLayout>
-            </ProtectedRoute>
         </Router>
     );
 }

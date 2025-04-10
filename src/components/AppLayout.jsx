@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { Menu, Sun, Moon } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-const AppLayout = ({
-    children,
-    handleLogout,
-    mobileMenuOpen,
-    setMobileMenuOpen,
-}) => {
+const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
     const { isAuthenticated } = useAuth();
     const location = useLocation();
     const noNavbarRoutes = ["/login", "/register"];
     const showNavbar =
         isAuthenticated && !noNavbarRoutes.includes(location.pathname);
     const [darkMode, setDarkMode] = useState(false);
+
+    const { logout } = useAuth();
 
     // Effect untuk mengatur mode tema dari localStorage saat komponen dimuat
     useEffect(() => {
@@ -134,7 +131,7 @@ const AppLayout = ({
                                 Topup
                             </a>
                             <button
-                                onClick={handleLogout}
+                                onClick={logout}
                                 className={
                                     darkMode ? "text-gray-300" : "text-gray-600"
                                 }
@@ -330,7 +327,7 @@ const AppLayout = ({
                         : "container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
                 }`}
             >
-                {children}
+                <Outlet />
             </main>
         </div>
     );
