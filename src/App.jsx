@@ -12,6 +12,8 @@ import AppLayout from "./components/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TopupPage from "./pages/TopupPage";
 import HomePage from "./pages/HomePage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+
 import { useAuth } from "./context/AuthContext";
 
 function App({ darkMode }) {
@@ -55,6 +57,10 @@ function App({ darkMode }) {
                     <Route
                         path="/topup"
                         element={<TopupPage darkMode={darkMode} />}
+                    />
+                    <Route
+                        path="/analytics"
+                        element={<AnalyticsPage darkMode={darkMode} />}
                     />
                 </Route>
             </Routes>
