@@ -6,8 +6,13 @@ const useWallet = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [wallet, setWallet] = useState(null);
+    const [refetch, setRefetch] = useState(1);
 
     const { currentUser } = useAuth();
+
+    const fetchWalletAgain = () => {
+        setRefetch((prev) => prev + 1);
+    };
 
     useEffect(() => {
         const fetchWallet = async () => {
@@ -26,9 +31,9 @@ const useWallet = () => {
         };
 
         if (currentUser?.id) fetchWallet();
-    }, [currentUser?.id]);
+    }, [currentUser?.id, refetch]);
 
-    return { wallet, loading, error };
+    return { wallet, fetchWalletAgain, loading, error };
 };
 
 export default useWallet;

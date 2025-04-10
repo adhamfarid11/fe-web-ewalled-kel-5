@@ -5,7 +5,6 @@ import {
     Route,
     Navigate,
 } from "react-router-dom";
-import { Eye, Plus, Send, Search, ChevronDown } from "lucide-react";
 import TransferPage from "./pages/TransferPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -13,6 +12,8 @@ import AppLayout from "./components/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TopupPage from "./pages/TopupPage";
 import HomePage from "./pages/HomePage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+
 import { useAuth } from "./context/AuthContext";
 
 function App({ darkMode }) {
@@ -56,6 +57,10 @@ function App({ darkMode }) {
                     <Route
                         path="/topup"
                         element={<TopupPage darkMode={darkMode} />}
+                    />
+                    <Route
+                        path="/analytics"
+                        element={<AnalyticsPage darkMode={darkMode} />}
                     />
                 </Route>
             </Routes>

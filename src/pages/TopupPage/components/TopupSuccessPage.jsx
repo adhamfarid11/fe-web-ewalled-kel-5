@@ -1,3 +1,5 @@
+import { CheckCircle, Printer } from "lucide-react";
+
 const TopupSuccessPage = ({ transaction, onClose }) => {
     const handlePrint = () => {
         window.print();

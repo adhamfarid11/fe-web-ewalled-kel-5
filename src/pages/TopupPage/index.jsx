@@ -1,5 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, CheckCircle, Printer } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import axiosInstance from "../../api/axiosInstance";
+import { useAuth } from "../../context/AuthContext";
+import useWallet from "../../hooks/useWallet";
+
+import TopupSuccessPage from "./components/TopupSuccessPage";
 
 const TopupPage = () => {
     const [amount, setAmount] = useState("");
@@ -10,9 +15,11 @@ const TopupPage = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(
         !!localStorage.getItem("token"),
     );
-    const [currentUser, setCurrentUser] = useState(null);
     const [transactionResult, setTransactionResult] = useState(null);
     const [selectedRecipient, setSelectedRecipient] = useState(null);
+
+    const { currentUser } = useAuth();
+    const { fetchWalletAgain, wallet } = useWallet();
 
     // Data metode pembayaran statis
     const paymentMethods = [
@@ -26,56 +33,8 @@ const TopupPage = () => {
         setSelectedRecipient(method);
         setRecipient(method.name);
         setShowRecipientDropdown(false);
+        setNotes("Top Up from " + method.name);
     };
-    // Fetch user balance from the API
-    const fetchUserBalance = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token || !currentUser?.id) return;
-
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/users/${currentUser.id}`,
-                {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                },
-            );
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            setCurrentUser((prevUser) =>
-                prevUser ? { ...prevUser, balance: data.balance } : null,
-            );
-        } catch (error) {
-            console.error("Error fetching user balance:", error);
-        }
-    };
-
-    // Load user data from localStorage on initial render
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            try {
-                const parsedUser = JSON.parse(storedUser);
-                setCurrentUser(parsedUser);
-            } catch (e) {
-                console.error("Error parsing user from localStorage:", e);
-            }
-        }
-    }, []);
-
-    // Fetch user balance when authenticated or user changes
-    useEffect(() => {
-        if (isAuthenticated && currentUser?.id) {
-            fetchUserBalance();
-        }
-    }, [isAuthenticated, currentUser?.id]);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -114,6 +73,7 @@ const TopupPage = () => {
         setNotes("");
         setSelectedRecipient(null);
         setTransactionResult(null);
+        fetchWalletAgain();
     };
 
     const handleTopup = async () => {
@@ -146,31 +106,13 @@ const TopupPage = () => {
             }
 
             // Kirim permintaan top-up ke backend
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/transactions/topup`,
-                {
-                    method: "POST",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        userId: currentUser.id, // ID user yang melakukan top-up
-                        amount: numericAmount, // Jumlah top-up
-                        description: notes || "Topup", // Catatan (opsional)
-                        paymentMethod: selectedRecipient.name, // Metode pembayaran (Credit Card, Bank Transfer, QRIS)
-                    }),
-                },
-            );
-
-            // Handle response dari backend
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Error response:", errorText);
-                throw new Error(
-                    `Topup gagal: ${response.status} ${response.statusText}`,
-                );
-            }
+            const response = await axiosInstance.post(`/transactions`, {
+                walletId: wallet.id,
+                transactionType: "TOP_UP",
+                amount: numericAmount,
+                recipientAccountNumber: "",
+                description: notes,
+            });
 
             // Tampilkan hasil transaksi sukses
             setTransactionResult({
@@ -182,9 +124,6 @@ const TopupPage = () => {
                 description: notes || "Topup", // Catatan transaksi
                 success: true, // Status sukses
             });
-
-            // Perbarui saldo pengguna
-            fetchUserBalance();
         } catch (error) {
             console.error("Error selama top-up:", error);
             alert("Top-up gagal");
