@@ -102,11 +102,11 @@ const Table = ({ darkMode }) => {
         <>
             {/* Transactions Section */}
             <div
-                className={`${
+                className={`w-full ${
                     darkMode
                         ? "bg-gray-800 border-gray-700"
                         : "bg-white border-gray-200"
-                } border rounded-xl`}
+                } border rounded-3xl`}
             >
                 {/* Search, Show, and Sort Controls */}
                 <div className="p-3 sm:p-4 flex items-center justify-between gap-4">

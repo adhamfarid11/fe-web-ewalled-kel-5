@@ -23,7 +23,7 @@ const HeaderGreeting = ({ darkMode }) => {
         >
             <div>
                 <h1 className="text-xl sm:text-2xl font-bold mb-1">
-                    {getGreeting()}, {currentUser?.namaLengkap || "User"}
+                    {getGreeting()}, {currentUser?.fullname || "User"}
                 </h1>
                 <p
                     className={`text-sm sm:text-base ${

@@ -8,12 +8,16 @@ import useFetchWalletsList from "../../hooks/useFetchWalletsList";
 import axiosInstance from "../../api/axiosInstance";
 import TransferSuccessPage from "./components/TransferPageSuccess";
 
+const TransferCategories = ["Food", "E-Commerce", "Transfer", "Entertainment"];
+
 const TransferPage = () => {
     const [showBalance, setShowBalance] = useState(true);
     const [amount, setAmount] = useState("");
     const [recipient, setRecipient] = useState("Penerima");
     const [notes, setNotes] = useState("");
     const [showRecipientDropdown, setShowRecipientDropdown] = useState(false);
+    const [category, setCategory] = useState("");
+
     const dropdownRef = useRef(null);
 
     const [transactionResult, setTransactionResult] = useState(null);
@@ -100,6 +104,7 @@ const TransferPage = () => {
                 walletId: currentUser?.id,
                 transactionType: "TRANSFER",
                 recipientAccountNumber: recipientAccountNumber,
+                category: category,
                 amount: numericAmount,
                 description: notes,
             });
@@ -230,6 +235,38 @@ const TransferPage = () => {
                                 </div>
                             )}
 
+                            <div className="mb-6">
+                                <div className="flex flex-col justify-between">
+                                    <div className="text-sm text-gray-500 mb-2">
+                                        Category:
+                                    </div>
+                                    <select
+                                        id="category"
+                                        value={category}
+                                        onChange={(e) =>
+                                            setCategory(e.target.value)
+                                        }
+                                        className={`bg-gray-50 border border-gray-50 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                            category === ""
+                                                ? "text-gray-400"
+                                                : "text-gray-900"
+                                        }`}
+                                    >
+                                        <option value="" disabled hidden>
+                                            Choose a category
+                                        </option>
+                                        {TransferCategories.map((cat) => (
+                                            <option
+                                                key={cat}
+                                                value={cat}
+                                                className="text-gray-900"
+                                            >
+                                                {cat}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
                             <div className="mb-6">
                                 <label className="block text-sm text-gray-500 mb-2">
                                     Notes:

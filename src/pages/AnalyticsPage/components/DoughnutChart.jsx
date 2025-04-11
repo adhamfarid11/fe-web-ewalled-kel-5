@@ -4,33 +4,13 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const data = {
-    labels: ["Food", "Transport", "Entertainment", "Bills", "Health", "Others"],
-    datasets: [
-        {
-            label: "Expenses",
-            data: [200, 150, 100, 75, 50, 25],
-            backgroundColor: [
-                "#A8DADC",
-                "#457B9D",
-                "#F4A261",
-                "#E76F51",
-                "#2A9D8F",
-                "#F7B801",
-            ],
-            borderColor: "#ffffff",
-            borderWidth: 2,
-        },
-    ],
-};
-
 const options = {
     cutout: "65%",
     plugins: {
         legend: {
             position: "bottom",
             labels: {
-                color: "#444", // optional
+                color: "#444",
                 font: {
                     size: 14,
                 },
@@ -56,10 +36,10 @@ const options = {
     },
 };
 
-export default function DoughnutChart() {
+export default function DoughnutChart({ categories }) {
     return (
         <div className="flex w-full justify-center items-center h-[40vh]">
-            <Doughnut data={data} options={options} />;
+            <Doughnut data={categories} options={options} />
         </div>
     );
 }
