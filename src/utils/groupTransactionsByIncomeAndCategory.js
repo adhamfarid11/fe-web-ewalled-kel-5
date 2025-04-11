@@ -6,7 +6,6 @@ function groupTransactionsByExpenseAndCategory(transactions) {
 
         if (!tx.isIncome) {
             expenseCategories[key] = (expenseCategories[key] || 0) + tx.amount;
-        } else {
         }
     });
 
@@ -44,11 +43,13 @@ function groupTransactionsByIncomeAndCategory(transactions) {
     const incomeCategories = {};
 
     transactions?.forEach((tx) => {
-        const key = tx.category || "Others";
-
         if (tx.isIncome) {
+            const key =
+                tx.category === "Top Up" || tx.category === "Salary"
+                    ? tx.category
+                    : "Transfer In";
+
             incomeCategories[key] = (incomeCategories[key] || 0) + tx.amount;
-        } else {
         }
     });
 
