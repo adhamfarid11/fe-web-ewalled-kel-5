@@ -1,0 +1,45 @@
+.currency-conversion {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 50px;
+
+    .conversion-card {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid rgb(229 231 235);
+        overflow: hidden;
+        border-radius: 16px;
+        background-color: white;
+        padding: 16px;
+
+        .currency-input-with-flag {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            .currency-flag {
+                height: 30px;
+            }
+            // overwrting ant design
+            .ant-select {
+                width: 100% !important;
+            }
+            .ant-select-selector {
+                border: none !important;
+            }
+        }
+
+        .custom-input-number {
+            text-align: center;
+            font-size: 50px;
+            width: 100%;
+            border-radius: 0 0 10px 10px;
+            padding-bottom: 20px;
+        }
+
+        // overwrting ant design
+        .ant-input-number-input {
+            width: 500px;
+        }
+    }
+}
