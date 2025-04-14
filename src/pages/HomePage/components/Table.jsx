@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../../../context/AuthContext";
-import { Search } from "lucide-react";
+import React, { useState } from "react";
 import formatDateTime from "../../../utils/formatDateTime";
 
 const Table = ({ darkMode, transactions }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
-
-    const [showCount, setShowCount] = useState(10);
-    const [sortCriteria, setSortCriteria] = useState("date");
-    const [sortDirection, setSortDirection] = useState("desc");
-    const [searchTerm, setSearchTerm] = useState("");
 
     // Handle search form submission
     const handleSearch = (e) => {
@@ -20,7 +13,7 @@ const Table = ({ darkMode, transactions }) => {
     };
 
     const handleTransactionFromTo = (transaction) => {
-        const id = JSON.parse(localStorage.getItem("user")).id;
+        const id = JSON.parse(localStorage.getItem("user"))?.id;
 
         if (transaction.transactionType === "TRANSFER") {
             if (transaction?.sender?.id == id) {
@@ -32,7 +25,7 @@ const Table = ({ darkMode, transactions }) => {
     };
 
     const isCredit = (transaction) => {
-        const id = JSON.parse(localStorage.getItem("user")).id;
+        const id = JSON.parse(localStorage.getItem("user"))?.id;
 
         if (transaction.transactionType === "TRANSFER") return true;
 
