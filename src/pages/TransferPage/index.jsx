@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 
+import { message } from "antd";
+
 import formatBalance from "../../utils/formatBalance";
 import { useAuth } from "../../context/AuthContext";
 import useWallet from "../../hooks/useWallet";
@@ -82,17 +84,17 @@ const TransferPage = () => {
         const numericAmount = parseFloat(amountValue);
 
         if (isNaN(numericAmount) || numericAmount <= 0) {
-            alert("Please enter a valid amount");
+            message.warning("Please enter a valid amount");
             return;
         }
 
         if (!recipient || recipient === "Penerima") {
-            alert("Please select a recipient");
+            message.warning("Please select a recipient");
             return;
         }
 
         if (!selectedRecipient) {
-            alert("Please select a valid recipient");
+            message.warning("Please select a valid recipient");
             return;
         }
 
@@ -128,7 +130,7 @@ const TransferPage = () => {
                 "Error during transfer:",
                 error.response.data.message,
             );
-            alert(`Error: ${error?.response?.data?.message}`);
+            message.warning(`Error: ${error?.response?.data?.message}`);
         }
     };
 
