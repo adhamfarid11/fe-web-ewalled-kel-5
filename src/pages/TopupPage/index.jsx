@@ -4,6 +4,8 @@ import axiosInstance from "../../api/axiosInstance";
 import { useAuth } from "../../context/AuthContext";
 import useWallet from "../../hooks/useWallet";
 
+import { message } from "antd";
+
 import TopupSuccessPage from "./components/TopupSuccessPage";
 
 const TopupPage = () => {
@@ -82,13 +84,13 @@ const TopupPage = () => {
 
         // Validasi amount
         if (isNaN(numericAmount) || numericAmount <= 0) {
-            alert("Masukkan jumlah top-up yang valid");
+            message.warning("Masukkan jumlah top-up yang valid");
             return;
         }
 
         // Validasi metode pembayaran
         if (!selectedRecipient) {
-            alert("Pilih metode pembayaran terlebih dahulu");
+            message.warning("Pilih metode pembayaran terlebih dahulu");
             return;
         }
 
@@ -101,7 +103,7 @@ const TopupPage = () => {
 
             // Pastikan currentUser dan ID-nya ada
             if (!currentUser?.id) {
-                alert("Pengguna tidak valid. Silakan login ulang.");
+                message.warning("Pengguna tidak valid. Silakan login ulang.");
                 return;
             }
 
@@ -126,7 +128,7 @@ const TopupPage = () => {
             });
         } catch (error) {
             console.error("Error selama top-up:", error);
-            alert("Top-up gagal");
+            message.warning("Top-up gagal");
         }
     };
 

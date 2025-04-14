@@ -130,7 +130,7 @@ const TransferPage = () => {
                 "Error during transfer:",
                 error.response.data.message,
             );
-            alert(`Error: ${error?.response?.data?.message}`);
+            message.warning(`Error: ${error?.response?.data?.message}`);
         }
     };
 
