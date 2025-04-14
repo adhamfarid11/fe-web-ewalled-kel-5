@@ -11,7 +11,7 @@ import useTransactions from "../../hooks/useTransactions";
 const AnalyticsPage = ({ darkMode }) => {
     const [activeTab, setActiveTab] = useState("Income");
 
-    const { transactions } = useTransactions();
+    const { transactions, loading } = useTransactions();
     const expenseCategories =
         groupTransactionsByExpenseAndCategory(transactions);
     const incomeCategories = groupTransactionsByIncomeAndCategory(transactions);
@@ -32,8 +32,9 @@ const AnalyticsPage = ({ darkMode }) => {
                         activeTab={activeTab}
                     />
                 </div>
-
-                {activeTab === "Income" ? (
+                {loading ? (
+                    <p>Loading...</p>
+                ) : activeTab === "Income" ? (
                     <>
                         <h1 className="text-xl font mx-4 ">
                             Your Total Income
@@ -49,7 +50,7 @@ const AnalyticsPage = ({ darkMode }) => {
                     </>
                 )}
             </div>
-            <Table darkMode={darkMode} />
+            <Table darkMode={darkMode} transactions={transactions} />
         </div>
     );
 };
