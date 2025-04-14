@@ -76,7 +76,10 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex">
+        <div
+            className="min-h-screen flex"
+            style={{ backgroundColor: "#EFEBD8" }}
+        >
             {/* Left Side - Form */}
             <div className="w-full md:w-1/2 flex items-center justify-center p-6">
                 <div className="w-full max-w-md">
@@ -85,11 +88,10 @@ const LoginPage = () => {
                             <img
                                 src="/images/logo.png"
                                 alt="E-Wallet Logo"
-                                width="32"
-                                height="32"
+                                width="240"
+                                height="240"
                             />
                         </div>
-                        <h1 className="text-2xl font-bold">Walled</h1>
                     </div>
 
                     {error && (
@@ -129,7 +131,7 @@ const LoginPage = () => {
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white p-3 rounded font-medium hover:bg-blue-700 transition duration-200"
+                            className="w-full bg-[#211F1F] text-white p-3 rounded font-medium hover:bg-blue-700 transition duration-200"
                             disabled={loading}
                         >
                             {loading ? "Memproses..." : "Login"}

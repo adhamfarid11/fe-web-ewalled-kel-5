@@ -17,7 +17,7 @@ const AccountBalance = ({ darkMode }) => {
                 <div className="md:col-span-3">
                     <div
                         className={`${
-                            darkMode ? "bg-gray-800" : "bg-blue-600"
+                            darkMode ? "bg-gray-800" : "bg-[#211F1F]"
                         } text-white rounded-xl p-4 h-full`}
                     >
                         <div className="text-sm opacity-80 mb-2">
@@ -69,7 +69,7 @@ const AccountBalance = ({ darkMode }) => {
                                 className={`${
                                     darkMode
                                         ? "bg-gray-700 hover:bg-gray-600"
-                                        : "bg-blue-600 hover:bg-blue-700"
+                                        : "bg-[#211F1F] hover:bg-blue-700"
                                 } text-white rounded-full p-2`}
                                 onClick={() =>
                                     (window.location.href = "/topup")
@@ -81,7 +81,7 @@ const AccountBalance = ({ darkMode }) => {
                                 className={`${
                                     darkMode
                                         ? "bg-gray-700 hover:bg-gray-600"
-                                        : "bg-blue-600 hover:bg-blue-700"
+                                        : "bg-[#211F1F] hover:bg-blue-700"
                                 } text-white rounded-full p-2`}
                                 onClick={() =>
                                     (window.location.href = "/transfer")

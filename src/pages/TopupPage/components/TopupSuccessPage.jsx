@@ -55,7 +55,7 @@ const TopupSuccessPage = ({ transaction, onClose }) => {
                     </button>
                     <button
                         onClick={onClose}
-                        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-[#211F1F]"
                     >
                         Close
                     </button>

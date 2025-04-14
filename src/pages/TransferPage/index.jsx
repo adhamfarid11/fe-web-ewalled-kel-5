@@ -145,7 +145,7 @@ const TransferPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#F7F6EE]">
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
                 <div className="flex justify-center">
                     <div className="w-full max-w-md">
@@ -286,7 +286,7 @@ const TransferPage = () => {
 
                             <button
                                 onClick={handleTransfer}
-                                className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors text-center font-medium"
+                                className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-[#211F1F] transition-colors text-center font-medium"
                             >
                                 Transfer
                             </button>

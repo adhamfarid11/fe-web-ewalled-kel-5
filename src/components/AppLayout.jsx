@@ -45,7 +45,7 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
     return (
         <div
             className={`min-h-screen ${
-                darkMode ? "bg-gray-900 text-white" : "bg-gray-50"
+                darkMode ? "bg-gray-900 text-white" : "bg-[#F7F6EE]"
             } flex flex-col transition-colors duration-200`}
         >
             {showNavbar && (
@@ -60,18 +60,17 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                         <div className="flex items-center space-x-2">
                             <div
                                 className={`flex items-center ${
-                                    darkMode ? "text-blue-400" : "text-blue-600"
+                                    darkMode
+                                        ? "text-blue-400"
+                                        : "text-black-600"
                                 }`}
                             >
                                 <img
                                     src="/images/logo.png"
                                     alt="E-Wallet Logo"
-                                    width="32"
-                                    height="32"
+                                    width="120"
+                                    height="120"
                                 />
-                                <span className="ml-2 font-semibold">
-                                    Walled
-                                </span>
                             </div>
                         </div>
 
@@ -86,7 +85,7 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                     location.pathname === "/"
                                         ? darkMode
                                             ? "text-blue-400 font-medium"
-                                            : "text-blue-600 font-medium"
+                                            : "text-black-600 font-medium"
                                         : darkMode
                                         ? "text-gray-300"
                                         : "text-gray-600"
@@ -104,7 +103,7 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                     location.pathname === "/transfer"
                                         ? darkMode
                                             ? "text-blue-400 font-medium"
-                                            : "text-blue-600 font-medium"
+                                            : "text-black-600 font-medium"
                                         : darkMode
                                         ? "text-gray-300"
                                         : "text-gray-600"
@@ -122,7 +121,7 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                     location.pathname === "/topup"
                                         ? darkMode
                                             ? "text-blue-400 font-medium"
-                                            : "text-blue-600 font-medium"
+                                            : "text-black-600 font-medium"
                                         : darkMode
                                         ? "text-gray-300"
                                         : "text-gray-600"
@@ -140,7 +139,7 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                     location.pathname === "/analytics"
                                         ? darkMode
                                             ? "text-blue-400 font-medium"
-                                            : "text-blue-600 font-medium"
+                                            : "text-black-600 font-medium"
                                         : darkMode
                                         ? "text-gray-300"
                                         : "text-gray-600"
@@ -244,7 +243,7 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                         location.pathname === "/"
                                             ? darkMode
                                                 ? "text-blue-400 bg-gray-800"
-                                                : "text-blue-600 bg-gray-50"
+                                                : "text-black-600 bg-gray-50"
                                             : darkMode
                                             ? "text-gray-300 hover:bg-gray-800"
                                             : "text-gray-600 hover:bg-gray-50"
@@ -262,7 +261,7 @@ const AppLayout = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                         location.pathname === "/transfer"
                                             ? darkMode
                                                 ? "text-blue-400 bg-gray-800"
-                                                : "text-blue-600 bg-gray-50"
+                                                : "text-black-600 bg-gray-50"
                                             : darkMode
                                             ? "text-gray-300 hover:bg-gray-800"
                                             : "text-gray-600 hover:bg-gray-50"
