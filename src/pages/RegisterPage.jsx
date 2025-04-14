@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import validateForm from "../utils/validateForm";
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -27,6 +28,14 @@ const RegisterPage = () => {
         setLoading(true);
         setError("");
         setSuccessMessage(""); // Reset success message
+
+        const validation = validateForm(formData);
+        if (validation !== "") {
+            console.log("askfkfsaf");
+            setLoading(false);
+            setError(validation);
+            return;
+        }
 
         try {
             const response = await axios.post(
